@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import AlbumCard from "../components/AlbumCard";
+import Button from "../components/Button";
 
-const AlbumDetail = (props) => {
+
+const AlbumDetail = () => {
     const [album, setAlbum] = useState(null);
-    const albumId = props.match.params.id; 
+    const navigate = useNavigate();
+    const { id: albumId } = useParams(); // Destructuring to get the 'id' param and renaming it to 'albumId'
   
-
     useEffect(() => {
         axios({
           method: 'get',
@@ -23,18 +27,17 @@ const AlbumDetail = (props) => {
     }, [albumId]);
   
     return (
-      <div>
-        {album ? (
-          <div>
-            <h1>{album.title}</h1>
-            <h1>{album.artist}</h1>
-            <h1>{album.price}</h1>
-          </div>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
-    );
-  }
+        <div>
+          {album ? (
+            <AlbumCard album={album} />
+          ) : (
+            <p>Loading...</p>
+          )}
+          <Button label="Go Back" onClick={() => navigate(-1)} />
+        </div>
+        
+      );
   
-  export default AlbumDetail;
+}
+
+export default AlbumDetail;
