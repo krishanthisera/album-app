@@ -1,0 +1,81 @@
+basePath: /api/v1
+definitions:
+  models.Album:
+    properties:
+      artist:
+        type: string
+      id:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: '@krishanthisera'
+    name: Krishan Thisera
+    url: https://github.com/krishanthisera/gitops-for-devs/issues
+  description: A album management service API in Go using Gin framework.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Album API
+  version: "1.0"
+paths:
+  /album:
+    post:
+      description: Takes an album JSON and store.
+      parameters:
+      - description: Album JSON
+        in: body
+        name: album
+        required: true
+        schema:
+          $ref: '#/definitions/models.Album'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Album'
+      summary: Store a new album
+      tags:
+      - albums
+  /albums:
+    get:
+      description: Responds with the list of albums as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Album'
+            type: array
+      summary: Get album array
+      tags:
+      - albums
+  /albums/{id}:
+    get:
+      description: Returns the album whose ISBN value matches the ID.
+      parameters:
+      - description: search album by ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Album'
+      summary: Get single album by id
+      tags:
+      - albums
+swagger: "2.0"
