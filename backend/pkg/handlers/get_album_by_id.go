@@ -12,7 +12,7 @@ import (
 // @Produce      json
 // @Param        id  path      string  true  "search album by ID"
 // @Success      200  {object}  models.Album
-// @Router       /albums/{id} [get]
+// @Router       /album/{id} [get]
 func GetAlbumByID(c *gin.Context) {
 	id := c.Param("id")
 

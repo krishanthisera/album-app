@@ -12,7 +12,7 @@ import (
 // @Tags         albums
 // @Produce      json
 // @Param        album  body      models.Album  true  "Album JSON"
-// @Success      200   {object}  models.Album
+// @Success      201   {object}  models.Album
 // @Router       /album [post]
 func PostAlbums(c *gin.Context) {
 	var newAlbum models.Album
