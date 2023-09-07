@@ -8,16 +8,18 @@ This is a simple RESTful API built with the [Gin framework](https://github.com/g
 /backend
   /cmd
     /api
-      main.go                  # Entry point of the application
+      main.go                   # Entry point of the application
   /pkg
+    /routes
+      route.go                  # Route groups
     /models
-      album.go                 # Defines the Album data structure
+      album.go                  # Defines the Album data structure
     /handlers
-      album_handler.go        # Contains the HTTP handlers for the application
+      album_handler.go          # Contains the HTTP handlers for the application
     /data
-      mock_data.go             # Mock data for the application (temporary)
-  go.mod                      # Go module file
-  go.sum                      # Go checksum file
+      mock_data.go              # Mock data for the application (temporary)
+  go.mod                        # Go module file
+  go.sum                        # Go checksum file
 ```
 
 ## Setup
@@ -25,20 +27,20 @@ This is a simple RESTful API built with the [Gin framework](https://github.com/g
 1. Ensure you have Go installed (version 1.15 or later recommended).
 2. Clone the repository:
 
-```
+```bash
 git clone git@github.com:krishanthisera/gitops-for-devs.git
 cd backend
 ```
 
 3. Install the required dependencies:
 
-```
+```bash
 go mod tidy
 ```
 
 4. Run the application:
 
-```
+```bash
 go run ./cmd/api
 ```
 
@@ -92,7 +94,7 @@ swag init -g ./cmd/api/main.go -o ./cmd/api/docs/
 3. After generating the documentation, you can view the API docs by navigating to:
 
 ```
-http://127.0.0.1:[PORT]/docs/index.html#/
+http://localhost:[PORT]/docs/index.html#/
 ```
 
 Replace `[PORT]` with the port number on which your application is running, typically `8080` for this project.
