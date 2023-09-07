@@ -20,12 +20,10 @@ const styles = {
   },
 };
 
-// In `Card`, we can assign a style from an object by using curly braces
-// We are assigning the card, heading, and content all from our `style` object
-function Card() {
+function Card({ album }) {
   return (
     <div style={styles.card}>
-      <div style={styles.heading}>Lorem ipsum dolor</div>
+      <div style={styles.heading}>{album.title}</div>
       <div style={styles.content}>
         `Sed ut perspiciatis unde omnis iste natus error sit voluptatem
         accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
