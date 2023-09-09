@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	_ "github.com/krishanthisera/gitops-for-devs/cmd/api/docs"
 	"github.com/krishanthisera/gitops-for-devs/pkg/routes"
 	swaggerFiles "github.com/swaggo/files"
@@ -21,7 +23,15 @@ import (
 // @host      localhost:8080
 // @BasePath  /api/v1
 func main() {
-	router := routes.SetupRoutes()
+	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	router.Use(cors.New(config))
+
+	routes.SetupRoutes(router)
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
