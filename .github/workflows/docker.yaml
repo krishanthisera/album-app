@@ -20,10 +20,10 @@ jobs:
       matrix:
         include:
           - docker_file: backend/Dockerfile
-            image: ghcr.io/krishanthisera/backend
+            image: ghcr.io/krishanthisera/album-app-backend
             context: backend
           - docker_file: frontend/Dockerfile
-            image: ghcr.io/krishanthisera/frontend
+            image: ghcr.io/krishanthisera/album-app-frontend
             context: frontend
     permissions:
       contents: read
