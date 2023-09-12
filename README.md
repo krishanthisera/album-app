@@ -1,5 +1,5 @@
 
-# GitOps for Devs
+# Album App
 
 This repository contains the combined source code for the backend, written in Go, and the frontend, designed using React. The provided code acts as the core basis for my forthcoming article, in which I discuss the principles of GitOps in the context of Kubernetes.
 
