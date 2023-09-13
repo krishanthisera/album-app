@@ -13,6 +13,6 @@ RUN npm ci
 COPY . .
 
 # Start the application
-CMD [ "npm", "run", "dev:start" ]
+CMD [ "npm", "run", "dev" ]
 
 EXPOSE 3000
