@@ -1,0 +1,58 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - production
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build-and-push-docker-image:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast:  true
+      matrix:
+        include:
+          - docker_file: backend/Dockerfile
+            image: ghcr.io/krishanthisera/album-app-backend
+            context: backend
+          - docker_file: frontend/Dockerfile
+            image: ghcr.io/krishanthisera/album-app-frontend
+            context: frontend
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ matrix.image }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          file: ${{ matrix.docker_file }}
+          context: ${{ matrix.context }}
+          
+
+      
+    
