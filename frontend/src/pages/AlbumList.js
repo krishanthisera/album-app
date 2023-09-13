@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Card from "../components/Card";
+import { backendUrl } from "../constants/global"
 
 const AlbumList = () => {
     const [albums, setAlbums] = useState([]);
@@ -8,7 +9,7 @@ const AlbumList = () => {
     useEffect(() => {
         axios({
           method: 'get',
-          url: 'http://localhost:8080/api/v1/albums',
+          url: `${backendUrl}/api/v1/albums`,
           headers: {
             
             'Content-Type': 'application/json',
