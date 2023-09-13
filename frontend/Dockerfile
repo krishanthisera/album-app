@@ -12,7 +12,9 @@ RUN npm ci
 # Copy the rest of the application's files into the container
 COPY . .
 
-# Start the application
-CMD [ "npm", "run", "dev" ]
-
+# Expose port 3000 for the application
 EXPOSE 3000
+
+# Start the application
+ENTRYPOINT [ "npm", "run:dev" ] 
+
