@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import AlbumCard from "../components/AlbumCard";
 import Button from "../components/Button";
-
+import { backendUrl } from "../constants/global"
 
 const AlbumDetail = () => {
     const [album, setAlbum] = useState(null);
@@ -13,7 +13,7 @@ const AlbumDetail = () => {
     useEffect(() => {
         axios({
           method: 'get',
-          url: `http://localhost:8080/api/v1/album/${albumId}`,
+          url: `${backendUrl}/api/v1/album/${albumId}`,
           headers: {
             'Content-Type': 'application/json',
           },
