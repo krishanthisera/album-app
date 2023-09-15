@@ -1,21 +1,21 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import Link from "next/link";
 
 // We declare an object called styles that will contain a few objects for card and heading styles
 // Notice that each key lists CSS styles in camel case
 const styles = {
   card: {
     margin: 20,
-    background: '#e8eaf6',
-    cursor: 'pointer',
+    background: "#e8eaf6",
+    cursor: "pointer",
   },
   heading: {
-    background: '#3f51b5',
+    background: "#3f51b5",
     minHeight: 50,
     lineHeight: 3.5,
-    fontSize: '1.2rem',
-    color: 'white',
-    padding: '0 20px',
+    fontSize: "1.2rem",
+    color: "white",
+    padding: "0 20px",
   },
   content: {
     padding: 20,
@@ -23,11 +23,10 @@ const styles = {
 };
 
 function Card({ album }) {
-  const navigate = useNavigate();
-
   // Function to handle card click
   const handleCardClick = () => {
-    navigate(`/album/${album.id}`);
+    // We access window object to use browser location property to redirect user
+    window.location.href = `/album/${album.id}`;
   };
 
   return (
@@ -38,4 +37,3 @@ function Card({ album }) {
 }
 
 export default Card;
-
