@@ -5,8 +5,9 @@ import AlbumCard from "../../components/AlbumCard";
 import Button from "../../components/Button";
 
 export const getServerSideProps = async (context) => {
+  const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
   const res = await fetch(
-    `http://localhost:8080/api/v1/album/${context.params.id}`
+    `${BACKEND_URL}/api/v1/album/${context.params.id}`
   );
   const album = await res.json();
   return { props: { album } };

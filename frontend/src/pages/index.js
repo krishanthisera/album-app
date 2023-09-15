@@ -3,7 +3,8 @@ import React from "react";
 import Card from "../components/Card";
 
 export const getServerSideProps = async (context) => {
-  const res = await fetch("http://localhost:8080/api/v1/albums");
+  const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
+  const res = await fetch(`${BACKEND_URL}/api/v1/albums`);
   const albums = await res.json();
   return { props: { albums } };
 };
