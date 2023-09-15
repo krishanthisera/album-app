@@ -98,3 +98,26 @@ http://localhost:[PORT]/docs/index.html#/
 ```
 
 Replace `[PORT]` with the port number on which your application is running, typically `8080` for this project.
+
+## Docker Build Instructions
+
+This project uses a multi-stage Dockerfile to create a lightweight and optimized container for the application.
+
+### Building the Docker Image
+
+1. Navigate to the project directory.
+2. Run the following command to build the Docker image:
+
+```bash
+docker build -t album-app-backend .
+```
+
+### Running the Docker Container
+
+Once the image is built, you can run the application using the following command:
+
+```bash
+docker run -p 8080:8080 album-app-backend
+```
+
+This will start the application and expose it on port 8080 of your host machine.

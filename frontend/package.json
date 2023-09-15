@@ -1,6 +1,6 @@
 {
-  "name": "00-practice-app",
-  "version": "0.1.0",
+  "name": "albums-sample-app",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -40,5 +40,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "npm-run-all": "^4.1.5"
   }
 }
