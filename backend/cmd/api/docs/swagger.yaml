@@ -26,6 +26,9 @@ info:
 paths:
   /album:
     post:
+      consumes:
+      - application/json
+      - application/xml
       description: Takes an album JSON and store.
       parameters:
       - description: Album JSON
@@ -36,31 +39,20 @@ paths:
           $ref: '#/definitions/models.Album'
       produces:
       - application/json
+      - application/xml
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/models.Album'
       summary: Store a new album
       tags:
       - albums
-  /albums:
+  /album/{id}:
     get:
-      description: Responds with the list of albums as JSON.
-      produces:
+      consumes:
       - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Album'
-            type: array
-      summary: Get album array
-      tags:
-      - albums
-  /albums/{id}:
-    get:
+      - application/xml
       description: Returns the album whose ISBN value matches the ID.
       parameters:
       - description: search album by ID
@@ -70,12 +62,32 @@ paths:
         type: string
       produces:
       - application/json
+      - application/xml
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/models.Album'
       summary: Get single album by id
+      tags:
+      - albums
+  /albums:
+    get:
+      consumes:
+      - application/json
+      - application/xml
+      description: Responds with the list of albums as JSON.
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Album'
+            type: array
+      summary: Get album array
       tags:
       - albums
 swagger: "2.0"
