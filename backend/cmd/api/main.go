@@ -9,19 +9,19 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Album API
-// @version         1.0
-// @description     A album management service API in Go using Gin framework.
+//	@title			Album API
+//	@version		1.0
+//	@description	A album management service API in Go using Gin framework.
 
-// @contact.name   Krishan Thisera
-// @contact.url    https://github.com/krishanthisera/gitops-for-devs/issues
-// @contact.email  @krishanthisera
+//	@contact.name	Krishan Thisera
+//	@contact.url	https://github.com/krishanthisera/gitops-for-devs/issues
+//	@contact.email	@krishanthisera
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      localhost:8080
-// @BasePath  /api/v1
+//	@host		localhost:8080
+//	@BasePath	/api/v1
 func main() {
 	router := gin.Default()
 

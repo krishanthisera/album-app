@@ -26,8 +26,13 @@ const docTemplate = `{
         "/album": {
             "post": {
                 "description": "Takes an album JSON and store.",
+                "consumes": [
+                    "application/json",
+                    "application/xml"
+                ],
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ],
                 "tags": [
                     "albums"
@@ -45,8 +50,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/models.Album"
                         }
@@ -54,34 +59,16 @@ const docTemplate = `{
                 }
             }
         },
-        "/albums": {
-            "get": {
-                "description": "Responds with the list of albums as JSON.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "albums"
-                ],
-                "summary": "Get album array",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Album"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/albums/{id}": {
+        "/album/{id}": {
             "get": {
                 "description": "Returns the album whose ISBN value matches the ID.",
+                "consumes": [
+                    "application/json",
+                    "application/xml"
+                ],
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ],
                 "tags": [
                     "albums"
@@ -101,6 +88,34 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Album"
+                        }
+                    }
+                }
+            }
+        },
+        "/albums": {
+            "get": {
+                "description": "Responds with the list of albums as JSON.",
+                "consumes": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "tags": [
+                    "albums"
+                ],
+                "summary": "Get album array",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Album"
+                            }
                         }
                     }
                 }
