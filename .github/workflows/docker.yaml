@@ -1,12 +1,11 @@
-name: Publish Docker image
+name: Build Docker Image
 
 on:
-  push:
-    branches:
+  pull_request:
+    branches: 
+      - main
       - production
-  release:
-    types: [published]
-
+  
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -32,13 +31,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
-
       - name: 'Set React environment variables'
         run: |
           echo REACT_APP_BACKEND_URL=${{ vars.REACT_APP_BACKEND_URL }} > frontend/.env
@@ -52,11 +44,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           file: ${{ matrix.docker_file }}
           context: ${{ matrix.context }}
           
-
-      
-    

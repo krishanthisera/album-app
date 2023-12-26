@@ -1,0 +1,39 @@
+name: Build and Publish Docker Images
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check tag name
+        id: check_tag
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+
+      - name: Check app name
+        id: check_app
+        run: |
+          app_name=$(echo ${{ steps.check_tag.outputs.tag_name }} | awk -F'-' '{print $1}')
+          echo "::set-output name=app_name::$app_name"
+
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build and push frontend or backend image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ steps.check_app.outputs.app_name }}/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/album-app-${{ steps.check_tag.outputs.tag_name }}
