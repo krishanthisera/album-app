@@ -45,4 +45,4 @@ jobs:
         with:
           context: ${{ steps.check_app.outputs.app_name }}
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ steps.check_version.outputs.version }}
+          tags: ghcr.io/${{ github.repository }}-${{ steps.check_app.outputs.app_name }}:${{ steps.check_version.outputs.version }}
