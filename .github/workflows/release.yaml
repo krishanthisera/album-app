@@ -26,6 +26,12 @@ jobs:
           app_name=$(echo ${{ steps.check_tag.outputs.tag_name }} | awk -F'-' '{print $1}')
           echo "::set-output name=app_name::$app_name"
 
+      - name: Check Docker Image Version
+        id: check_version
+        run: |
+          version=$(echo ${{ steps.check_tag.outputs.tag_name }} | awk -F'-' '{print $2}')
+          echo "::set-output name=version::$version"
+
       - name: Login to GitHub Packages
         uses: docker/login-action@v1
         with:
@@ -39,4 +45,4 @@ jobs:
         with:
           context: ${{ steps.check_app.outputs.app_name }}
           push: true
-          tags: ghcr.io/${{ github.repository }}/album-app-${{ steps.check_tag.outputs.tag_name }}
+          tags: ghcr.io/${{ github.repository }}-${{ steps.check_app.outputs.app_name }}:${{ steps.check_version.outputs.version }}
