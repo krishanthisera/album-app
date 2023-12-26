@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -10,12 +10,10 @@ COPY package*.json ./
 RUN npm ci
 
 # Copy the rest of the application's files into the container
-COPY . .
+COPY --chown=node:node . .
 
 # Expose port 3000 for the application
 EXPOSE 3000
 
 # Start the application
-ENTRYPOINT [ "npm run:dev" ] 
-
-
+ENTRYPOINT [ "/bin/sh","-c","npm run dev:start" ] 
