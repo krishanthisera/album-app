@@ -5,6 +5,9 @@ on:
     types:
       - created
 
+env:
+  REGISTRY: ghcr.io 
+     
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
