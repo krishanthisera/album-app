@@ -75,23 +75,29 @@ jobs:
           version='${{ needs.build-and-publish.outputs.version }}'
           app_name='${{ needs.build-and-publish.outputs.app_name }}'
 
+          # Set the release branch name
+          release_branch='release/${app_name}_${version}'
+
           # Modify the Helm value file with the new tag
           sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
 
           # Create a new branch
           git config --global user.email ${{ github.actor }}@github.com
           git config --global user.name ${{ github.actor }}
-          git checkout -b release/${app_name}_${version}
+          git checkout -b ${release_branch}
 
-          # Add and commit changes
+          # Commit changes
           git add ${app_name}/values.yaml
           git commit -m "release: ${app_name} ${version}"
 
           # Push the changes to the remote repository
-          git push origin release/${app_name}_${version}
+          git push origin ${release_branch}
+
+          # Body Content
+          pr_body="${{ github.repository }} ${app_name} release ${version}. Please note that this is a automated PR."
+
+          # Title Content
+          pr_title="release: ${app_name} ${version}"
 
           # Open a pull request
-          gh pr create --title "release: ${app_name} ${version}" \ 
-            --body "${{ github.repository }} ${app_name} release ${version}. Please note that this is a automated PR." \
-            --base main --head release/${app_name}_${version} \
-            --repo ${{ env.CONFIG_REPO }}
+          gh pr create --title "${pr_title}" --body "${pr_body}" --base main --head ${release_branch} --repo ${{ env.CONFIG_REPO }}
