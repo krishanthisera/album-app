@@ -70,8 +70,8 @@ jobs:
           github-token: ${{ secrets.CONFIG_REPO_TOKEN }}
           script: |
             # Get the release tag and app name
-            version=${{ needs.build-and-publish.outputs.version }}
-            app_name=${{ needs.build-and-publish.outputs.app_name }}
+            version=v1.2.2
+            app_name=frontend
 
             # Modify the Helm value file with the new tag
             sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
