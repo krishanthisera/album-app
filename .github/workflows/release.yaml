@@ -47,6 +47,9 @@ jobs:
           context: ${{ steps.check_app.outputs.app_name }}
           push: true
           tags: ghcr.io/${{ github.repository }}-${{ steps.check_app.outputs.app_name }}:${{ steps.check_version.outputs.version }}
+    outputs:
+      version: ${{ steps.check_version.outputs.version }}
+      app_name: ${{ steps.check_app.outputs.app_name }}
 
   deployment:
     needs: build-and-publish
@@ -65,28 +68,28 @@ jobs:
 
         # Step to update album-app-config repository
       - name: Update album-app-config repository
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.CONFIG_REPO_TOKEN }}
-          script: |
-            # Get the release tag and app name
-            version=${{ needs.build-and-publish.outputs.version }}
-            app_name=${{ needs.build-and-publish.outputs.app_name }}
+        env:
+          GH_TOKEN: ${{ secrets.CONFIG_REPO_TOKEN }}
+        run: |
+          # Get the release tag and app name
+          version='${{ needs.build-and-publish.outputs.version }}'
+          app_name='${{ needs.build-and-publish.outputs.app_name }}'
 
-            # Modify the Helm value file with the new tag
-            sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
+          # Modify the Helm value file with the new tag
+          sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
 
-            # Create a new branch
-            git config --global user.email "actions@github.com"
-            git config --global user.name "GitHub Actions"
-            git checkout -b release/${app_name}_${version}
+          # Create a new branch
+          git checkout -b release/${app_name}_${version}
 
-            # Add and commit changes
-            git add path/to/album-app-config/values.yaml
-            git commit -m "release: ${app_name} ${version}"
+          # Add and commit changes
+          git add ${app_name}/values.yaml
+          git commit -m "release: ${app_name} ${version}"
 
-            # Push the changes to the remote repository
-            git push origin release/${app_name}_${version}
+          # Push the changes to the remote repository
+          git push origin release/${app_name}_${version}
 
-            # Open a pull request
-            gh pr create --title "release: ${app_name} ${version}" --body "Automated PR to update image tag" --base main --head release/${app_name}_${version} --repo ${{ env.CONFIG_REPO }}
+          # Open a pull request
+          gh pr create --title "release: ${app_name} ${version}" \ 
+            --body "${{ github.repository }} ${app_name} release ${vresion}. Please note that this is a automated PR." \
+            --base main --head release/${app_name}_${version} \
+            --repo ${{ env.CONFIG_REPO }}
