@@ -47,6 +47,8 @@ jobs:
           context: ${{ steps.check_app.outputs.app_name }}
           push: true
           tags: ghcr.io/${{ github.repository }}-${{ steps.check_app.outputs.app_name }}:${{ steps.check_version.outputs.version }}
+          build-args: |
+            VERSION=${{ steps.check_version.outputs.version }}
     outputs:
       version: ${{ steps.check_version.outputs.version }}
       app_name: ${{ steps.check_app.outputs.app_name }}
