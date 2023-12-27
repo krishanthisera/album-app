@@ -79,6 +79,8 @@ jobs:
           sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
 
           # Create a new branch
+          git config --global user.email ${{ github.actor }}@github.com
+          git config --global user.name ${{ github.actor }}
           git checkout -b release/${app_name}_${version}
 
           # Add and commit changes
@@ -90,6 +92,6 @@ jobs:
 
           # Open a pull request
           gh pr create --title "release: ${app_name} ${version}" \ 
-            --body "${{ github.repository }} ${app_name} release ${vresion}. Please note that this is a automated PR." \
+            --body "${{ github.repository }} ${app_name} release ${version}. Please note that this is a automated PR." \
             --base main --head release/${app_name}_${version} \
             --repo ${{ env.CONFIG_REPO }}
