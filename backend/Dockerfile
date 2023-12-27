@@ -12,6 +12,9 @@ COPY . .
 # Bypass the default Go proxy and fetch directly from the source
 ENV GOPROXY=direct
 
+# Set the version of the application
+ARG VERSION=development
+
 # Install 'git' and other dependencies necessary for building the application
 RUN apk add --no-cache git 
 
@@ -19,7 +22,7 @@ RUN apk add --no-cache git
 RUN go mod tidy -x
 
 # Compile the Go application with specific settings
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /go/bin/backend cmd/api/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'main.Version=${VERSION}'" -a -o /go/bin/backend cmd/api/main.go
 
 # -----------------------------
 # Stage 2: Create the final image
