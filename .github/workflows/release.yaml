@@ -76,7 +76,7 @@ jobs:
           app_name='${{ needs.build-and-publish.outputs.app_name }}'
 
           # Set the release branch name
-          release_branch='release/${app_name}_${version}'
+          release_branch=release/${app_name}_${version}
 
           # Modify the Helm value file with the new tag
           sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
