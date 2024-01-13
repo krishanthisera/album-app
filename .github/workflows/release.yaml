@@ -1,0 +1,105 @@
+name: Build and Publish Docker Images
+
+on:
+  release:
+    types:
+      - created
+
+env:
+  REGISTRY: ghcr.io
+  CONFIG_REPO: ${{ github.repository }}-config
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check tag name
+        id: check_tag
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+
+      - name: Check app name
+        id: check_app
+        run: |
+          app_name=$(echo ${{ steps.check_tag.outputs.tag_name }} | awk -F'-' '{print $1}')
+          echo "::set-output name=app_name::$app_name"
+
+      - name: Check Docker Image Version
+        id: check_version
+        run: |
+          version=$(echo ${{ steps.check_tag.outputs.tag_name }} | awk -F'-' '{print $2}')
+          echo "::set-output name=version::$version"
+
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build and push frontend or backend image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ steps.check_app.outputs.app_name }}
+          push: true
+          tags: ghcr.io/${{ github.repository }}-${{ steps.check_app.outputs.app_name }}:${{ steps.check_version.outputs.version }}
+          build-args: |
+            VERSION=${{ steps.check_version.outputs.version }}
+    outputs:
+      version: ${{ steps.check_version.outputs.version }}
+      app_name: ${{ steps.check_app.outputs.app_name }}
+
+  deployment:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+    # Checkout album-app-config repository
+    steps:
+      - name: Checkout album-app-config
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.CONFIG_REPO }} # Replace with the URL or name of the album-app-config repository
+          ref: main
+          token: ${{ secrets.CONFIG_REPO_TOKEN }}
+
+        # Step to update album-app-config repository
+      - name: Update album-app-config repository
+        env:
+          GH_TOKEN: ${{ secrets.CONFIG_REPO_TOKEN }}
+        run: |
+          # Get the release tag and app name
+          version='${{ needs.build-and-publish.outputs.version }}'
+          app_name='${{ needs.build-and-publish.outputs.app_name }}'
+
+          # Set the release branch name
+          release_branch=release/${app_name}_${version}
+
+          # Modify the Helm value file with the new tag
+          sed -i.bak "s/tag: \".*\"/tag: \"${version}\"/" ${app_name}/values.yaml
+
+          # Create a new branch
+          git config --global user.email ${{ github.actor }}@github.com
+          git config --global user.name ${{ github.actor }}
+          git checkout -b ${release_branch}
+
+          # Commit changes
+          git add ${app_name}/values.yaml
+          git commit -m "release: ${app_name} ${version}"
+
+          # Push the changes to the remote repository
+          git push origin ${release_branch}
+
+          # Body Content
+          pr_body="${{ github.repository }} ${app_name} release ${version}. Please note that this is a automated PR."
+
+          # Title Content
+          pr_title="release: ${app_name} ${version}"
+
+          # Open a pull request
+          gh pr create --title "${pr_title}" --body "${pr_body}" --base main --head ${release_branch} --repo ${{ env.CONFIG_REPO }}

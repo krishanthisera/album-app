@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/krishanthisera/gitops-for-devs/cmd/api/docs"
@@ -9,19 +11,22 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Album API
-// @version         1.0
-// @description     A album management service API in Go using Gin framework.
+// Version represents the current version of the application.
+var Version = "Development"
 
-// @contact.name   Krishan Thisera
-// @contact.url    https://github.com/krishanthisera/gitops-for-devs/issues
-// @contact.email  @krishanthisera
+//	@title			Album API
+//	@version		1.0
+//	@description	A album management service API in Go using Gin framework.
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+//	@contact.name	Krishan Thisera
+//	@contact.url	https://github.com/krishanthisera/gitops-for-devs/issues
+//	@contact.email	@krishanthisera
 
-// @host      localhost:8080
-// @BasePath  /api/v1
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host		localhost:8080
+// @BasePath	/api/v1
 func main() {
 	router := gin.Default()
 
@@ -30,6 +35,10 @@ func main() {
 	routes.SetupRoutes(router)
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	router.GET("/version", func(c *gin.Context) {
+		c.String(http.StatusOK, Version)
+	})
 
 	router.Run(":8080")
 }
